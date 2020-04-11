@@ -1,0 +1,46 @@
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.form {
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.task-list {
+  list-style: none;
+}
+
+.task-list__item {
+  max-width: 200px;
+  margin: 10px 0;
+  padding: 5px;
+  border: 1px solid black;
+}
+
+.form__label {
+  display: block;
+}
+
+.form__group {
+  padding-bottom: 20px;
+}
+
+.element_hidden {
+  display: none;
+}
+
+.task__buttons {
+  margin-top: 10px;
+}
+
+.button_ok {
+  margin-top: 10px;
+}

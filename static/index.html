@@ -3,12 +3,53 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.11.1/css/all.css"
+      integrity="sha384-IT8OQ5/IfeLGe8ZMxjj3QQNqT0zhBJSiFCL3uolrGgKRuenIU+mMS94kck/AHZWu"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
   <body>
-    <h1>Client side of the application</h1>
+    <div class="container" id="content">
+      <h1>Task manager</h1>
 
-    <div id="content"></div>
+      <button id="enable-btn">Add Task</button>
+      <form class="form element_hidden" id="form">
+        <h2>Add task</h2>
+        <div class="form__group">
+          <label class="form__label" for="header">Header</label>
+          <input
+            class="form__input"
+            type="text"
+            name="header"
+            id="input-header"
+            required
+          />
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="description">Description</label>
+          <input
+            class="form__input"
+            type="text"
+            name="description"
+            id="input-description"
+            required
+          />
+        </div>
+
+        <div class="form__group form__group_btn">
+          <button type="submit" id="add-task-btn">Add</button>
+          <button id="cancel-btn" type="button">Cancel</button>
+        </div>
+      </form>
+
+      <h2>Tasks:</h2>
+      <ul class="task-list" id="list"></ul>
+    </div>
 
     <script src="./main.js"></script>
   </body>
