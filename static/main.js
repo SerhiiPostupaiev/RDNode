@@ -3,11 +3,12 @@ window.addEventListener('DOMContentLoaded', main);
 async function main() {
   const container = document.getElementById('content');
 
-  const response = await fetch('http://localhost:3000', {
-    mode: 'no-cors',
-    headers: { 'Access-Control-Allow-Origin': '*' },
-  });
-  const result = await response.text();
+  try {
+    const response = await fetch('http://localhost:3000/test');
+    const result = await response.json();
 
-  console.log(result);
+    console.log(result);
+  } catch (err) {
+    console.error(err);
+  }
 }
