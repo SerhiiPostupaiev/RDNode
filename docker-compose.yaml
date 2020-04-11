@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+  server:
+    container_name: server-node
+    image: node
+    ports:
+      - 3000:3000
+      - 9222:9222
+    volumes:
+      - ./src:/src
+    working_dir: '/src'
+    command: 'sh start.sh ${MODE}'
+
+  client:
+    container_name: static-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./static:/usr/share/nginx/html
