@@ -1,32 +1,12 @@
-const express = require('express');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
+const http = require('http');
+const url = require('url');
 
-const app = express();
 const PORT = 3000;
 
-const allowCrossDomain = (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Methods', '*');
-  next();
-};
+const router = require('./router');
 
-app.use(helmet());
-app.use(
-  express.json({
-    extended: false,
-  })
-);
-app.use(allowCrossDomain);
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-app.get('/', (req, res) => {
-  const data = { msg: 'Task list API...' };
-  res.json(data);
+const app = http.createServer(async (req, res) => {
+  await router.handleRoute(req, res);
 });
-
-app.use('/api/tasks', require('./routes/tasks'));
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
