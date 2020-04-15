@@ -5,6 +5,7 @@ const taskList = document.getElementById('list');
 const openFormBtn = document.getElementById('enable-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 const addTaskBtn = document.getElementById('add-task-btn');
+const notification = document.getElementById('notification');
 
 openFormBtn.addEventListener('click', toggleForm);
 cancelBtn.addEventListener('click', toggleForm);
@@ -15,11 +16,15 @@ taskList.addEventListener('click', editTask);
 
 async function main() {
   try {
-    const response = await fetch('http://localhost:3000/api/tasks');
+    const response = await fetch('http://localhost:3000/tasks');
     const result = await response.json();
+    if (result.status !== 'success') {
+      showError(result.error);
+      return;
+    }
 
-    for (let i = 0; i < result.length; i++) {
-      taskList.insertAdjacentHTML('beforeend', renderTask(result[i]));
+    for (let i = 0; i < result.data.length; i++) {
+      taskList.insertAdjacentHTML('beforeend', renderTask(result.data[i]));
     }
   } catch (err) {
     console.error(err);
@@ -35,15 +40,24 @@ function editTask(e) {
   }
 }
 
+function showError(error) {
+  notification.textContent = error;
+  notification.classList.remove('notification_hidden');
+
+  setTimeout(() => {
+    notification.classList.add('notification_hidden');
+  }, 3000);
+}
+
 function renderEdit(task) {
-  const taskHeader = task.querySelector('.task__header');
+  const taskTitle = task.querySelector('.task__title');
   const taskDescription = task.querySelector('.task__description');
   const taskButtons = task.querySelector('.task__buttons');
 
-  taskHeader.classList.add('element_hidden');
-  taskHeader.insertAdjacentHTML(
+  taskTitle.classList.add('element_hidden');
+  taskTitle.insertAdjacentHTML(
     'afterend',
-    renderInput(taskHeader.textContent, 'header')
+    renderInput(taskTitle.textContent, 'title')
   );
 
   taskDescription.classList.add('element_hidden');
@@ -65,13 +79,13 @@ async function performEdit(e) {
   if (e !== null) {
     const task = e.target.closest('li');
     const bodyObj = {
-      header: task.querySelector('input[name="header"]').value,
+      title: task.querySelector('input[name="title"]').value,
       text: document.querySelector('input[name="text"]').value,
     };
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/tasks/${task.getAttribute('id')}`,
+        `http://localhost:3000/tasks/${task.getAttribute('id')}`,
         {
           method: 'PUT',
           headers: {
@@ -84,7 +98,12 @@ async function performEdit(e) {
 
       const result = await response.json();
 
-      task.insertAdjacentHTML('afterend', renderTask(result));
+      if (result.status !== 'success') {
+        showError(result.error);
+        return;
+      }
+      console.log(result.data);
+      task.insertAdjacentHTML('afterend', renderTask(result.data));
       task.remove();
     } catch (err) {
       console.error(err);
@@ -110,12 +129,18 @@ async function deleteTask(e) {
       const task = e.target.closest('li');
 
       try {
-        await fetch(
-          `http://localhost:3000/api/tasks/${task.getAttribute('id')}`,
+        const response = await fetch(
+          `http://localhost:3000/tasks/${task.getAttribute('id')}`,
           {
             method: 'DELETE',
           }
         );
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+          showError(result.error);
+          return;
+        }
 
         task.remove();
       } catch (err) {
@@ -130,12 +155,12 @@ async function addTaskToDB(e) {
     e.preventDefault();
 
     const bodyObj = {
-      header: document.getElementById('input-header').value,
+      title: document.getElementById('input-title').value,
       text: document.getElementById('input-description').value,
     };
 
     try {
-      const response = await fetch('http://localhost:3000/api/tasks', {
+      const response = await fetch('http://localhost:3000/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,7 +170,12 @@ async function addTaskToDB(e) {
       });
       const result = await response.json();
 
-      taskList.insertAdjacentHTML('afterbegin', renderTask(result));
+      if (result.status !== 'success') {
+        showError(result.error);
+        return;
+      }
+
+      taskList.insertAdjacentHTML('afterbegin', renderTask(result.data));
 
       taskForm.classList.add('element_hidden');
       openFormBtn.classList.remove('element_hidden');
@@ -174,9 +204,9 @@ function toggleForm(e) {
 }
 
 function renderTask(params) {
-  return `<li class="task-list__item task" id="${params.id}">
+  return `<li class="task-list__item task" id="${params._id}">
   <h3>Name</h3>
-  <p class="task__header">${params.header}</p>
+  <p class="task__title">${params.title}</p>
   <h3>Description</h3>
   <p class="task__description">${params.text}</p>
   <div class="task__buttons button">

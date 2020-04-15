@@ -83,6 +83,8 @@ class Tasks {
         );
       }
 
+      taskUpdated._id = _id;
+
       return responseHelpers.success(res, taskUpdated);
     } catch (err) {
       console.error(err);
@@ -105,6 +107,7 @@ class Tasks {
 
       return responseHelpers.success(res, _id);
     } catch (err) {
+      console.error(err);
       return responseHelpers.error(res, err);
     }
   }
@@ -127,7 +130,7 @@ class Tasks {
     if (params.text.length > 60) {
       return {
         result: false,
-        errorText: 'Task text should not longer than 60 characters',
+        errorText: 'Task text should not be longer than 60 characters',
       };
     }
 

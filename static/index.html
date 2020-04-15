@@ -3,12 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.11.1/css/all.css"
-      integrity="sha384-IT8OQ5/IfeLGe8ZMxjj3QQNqT0zhBJSiFCL3uolrGgKRuenIU+mMS94kck/AHZWu"
-      crossorigin="anonymous"
-    />
     <link rel="stylesheet" href="style.css" />
     <title>Document</title>
   </head>
@@ -20,12 +14,12 @@
       <form class="form element_hidden" id="form">
         <h2>Add task</h2>
         <div class="form__group">
-          <label class="form__label" for="header">Header</label>
+          <label class="form__label" for="title">Title</label>
           <input
             class="form__input"
             type="text"
-            name="header"
-            id="input-header"
+            name="title"
+            id="input-title"
             required
           />
         </div>
@@ -49,6 +43,8 @@
 
       <h2>Tasks:</h2>
       <ul class="task-list" id="list"></ul>
+
+      <div class="notification notification_hidden" id="notification"></div>
     </div>
 
     <script src="./main.js"></script>

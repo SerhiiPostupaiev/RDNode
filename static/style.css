@@ -4,8 +4,10 @@ ul {
 }
 
 .container {
+  position: relative;
   width: 500px;
   margin: 0 auto;
+  font: 1rem 'Arial', sans-serif;
 }
 
 .form {
@@ -43,4 +45,21 @@ ul {
 
 .button_ok {
   margin-top: 10px;
+}
+
+.notification {
+  position: fixed;
+  bottom: 10%;
+  left: 30%;
+  padding: 10px;
+  color: red;
+  background: rgb(173, 171, 171);
+  border: 1px solid black;
+  border-radius: 5px;
+  font: bold 1.2rem 'Arial';
+  z-index: 99;
+}
+
+.notification_hidden {
+  display: none;
 }
