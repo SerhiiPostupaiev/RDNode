@@ -5,10 +5,12 @@ const { Connection } = require('./dbLayer/dbService');
 
 const PORT = 3000;
 
-Connection.connectToMongoDB();
+Connection.connectToMongoDB(runServer);
 
-const app = http.createServer(async (req, res) => {
-  await router.handleRoute(req, res);
-});
+function runServer() {
+  const app = http.createServer(async (req, res) => {
+    await router.handleRoute(req, res);
+  });
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+}

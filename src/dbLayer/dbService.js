@@ -2,13 +2,14 @@ const { MongoClient } = require('mongodb');
 const dbConfigs = require('./dbConfigs.json');
 
 class Connection {
-  static async connectToMongoDB() {
+  static async connectToMongoDB(triggerServer) {
     if (!this.db) {
       this.db = await MongoClient.connect(this.dbUri, this.options);
       this.db = await this.db.db('tasks-db');
     }
-
     console.log('MongoDB connected!');
+
+    triggerServer();
   }
 }
 
