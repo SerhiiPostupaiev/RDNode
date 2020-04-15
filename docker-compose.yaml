@@ -10,6 +10,10 @@ services:
     volumes:
       - ./src:/src
     working_dir: '/src'
+    depends_on:
+      - mongo
+    links:
+      - mongo
     command: 'sh start.sh ${MODE}'
 
   client:
@@ -19,3 +23,9 @@ services:
       - 80:80
     volumes:
       - ./static:/usr/share/nginx/html
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017

@@ -1,4 +1,4 @@
-const taskController = require('./controllers/tasks');
+const { Tasks } = require('./controllers/tasks');
 const responseHelpers = require('./response/methods');
 
 class Router {
@@ -81,27 +81,27 @@ router
   .add({
     method: 'GET',
     path: '/tasks',
-    handler: taskController.get.bind(taskController),
+    handler: Tasks.get,
   })
   .add({
     method: 'GET',
-    path: /\/tasks\/([0-9]+)/,
-    handler: taskController.get.bind(taskController),
+    path: /\/tasks\/([0-9a-z]+)/,
+    handler: Tasks.get,
   })
   .add({
     method: 'POST',
     path: '/tasks',
-    handler: taskController.post.bind(taskController),
+    handler: Tasks.post,
   })
   .add({
     method: 'PUT',
-    path: /\/tasks\/([0-9]+)/,
-    handler: taskController.put.bind(taskController),
+    path: /\/tasks\/([0-9a-z]+)/,
+    handler: Tasks.put,
   })
   .add({
     method: 'DELETE',
-    path: /\/tasks\/([0-9]+)/,
-    handler: taskController.delete.bind(taskController),
+    path: /\/tasks\/([0-9a-z]+)/,
+    handler: Tasks.delete,
   });
 
 module.exports = router;

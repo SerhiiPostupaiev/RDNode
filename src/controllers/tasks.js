@@ -1,95 +1,115 @@
 const responseHelpers = require('../response/methods');
-
+const { Connection } = require('../dbLayer/dbService');
+const { ObjectId } = require('mongodb');
 class Tasks {
-  constructor() {}
-
-  get(req, res, id) {
-    if (id) {
-      this.getConcreteTask(req, res, id);
+  static get(req, res, _id) {
+    if (_id) {
+      Tasks.getConcreteTask(req, res, _id);
     } else {
-      this.getAllTasks(req, res);
+      Tasks.getAllTasks(req, res);
     }
   }
 
-  getConcreteTask(req, res, id) {
+  static async getConcreteTask(req, res, _id) {
     try {
-      const task = {
-        id,
-        title: 'ssdsd',
-        text: 'dsddddd',
-      };
+      const task = await Connection.db
+        .collection('tasks')
+        .findOne({ _id: new ObjectId(_id) });
+
+      if (task === null) {
+        return responseHelpers.payloadError(res, 'Task not found');
+      }
 
       return responseHelpers.success(res, task);
     } catch (err) {
+      console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  getAllTasks(req, res) {
+  static async getAllTasks(req, res) {
     try {
-      const tasks = [
-        {
-          title: 'ssdsd',
-          text: 'dsddddd',
-        },
-        {
-          title: '123',
-          text: 'dsddddd',
-        },
-        {
-          title: 'ss6665566565dsd',
-          text: 'dsddddd',
-        },
-      ];
+      const tasks = await Connection.db.collection('tasks').find({}).toArray();
 
       return responseHelpers.success(res, tasks);
     } catch (err) {
+      console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  post(req, res, id, body) {
-    const validation = this.paramsValidation(body);
+  static async post(req, res, _id, body) {
+    const validation = Tasks.paramsValidation(body);
 
     if (!validation.result) {
-      return responseHelpers.payloadError(res, validation.errorText, 404);
-    }
-
-    try {
-      return responseHelpers.success(res, body);
-    } catch (err) {
-      return responseHelpers.error(res, err);
-    }
-  }
-
-  put(req, res, id, body) {
-    const validation = this.paramsValidation(body);
-
-    if (!validation.result) {
-      return responseHelpers.payloadError(res, validation.errorText, 404);
+      return responseHelpers.payloadError(res, validation.errorText);
     }
 
     try {
       const task = {
-        id,
         title: body.title,
         text: body.text,
       };
+
+      await Connection.db.collection('tasks').insertOne(task);
       return responseHelpers.success(res, task);
     } catch (err) {
+      console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  delete(req, res, id) {
+  static async put(req, res, _id, body) {
+    const validation = Tasks.paramsValidation(body);
+
+    if (!validation.result) {
+      return responseHelpers.payloadError(res, validation.errorText);
+    }
+
     try {
-      return responseHelpers.success(res, id);
+      const taskUpdated = {
+        title: body.title,
+        text: body.text,
+      };
+
+      const result = await Connection.db
+        .collection('tasks')
+        .updateOne({ _id: new ObjectId(_id) }, { $set: taskUpdated });
+
+      if (result.modifiedCount === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Task not found, nothing to update'
+        );
+      }
+
+      return responseHelpers.success(res, taskUpdated);
+    } catch (err) {
+      console.error(err);
+      return responseHelpers.error(res, err);
+    }
+  }
+
+  static async delete(req, res, _id) {
+    try {
+      const result = await Connection.db
+        .collection('tasks')
+        .deleteOne({ _id: new ObjectId(_id) });
+
+      if (result.deletedCount === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Task not found, nothing to delete'
+        );
+      }
+
+      return responseHelpers.success(res, _id);
     } catch (err) {
       return responseHelpers.error(res, err);
     }
   }
 
-  paramsValidation(params) {
+  static paramsValidation(params) {
     if (params.text === '' || params.title === '') {
       return {
         result: false,
@@ -115,6 +135,4 @@ class Tasks {
   }
 }
 
-const tasks = new Tasks();
-
-module.exports = tasks;
+module.exports = { Tasks };

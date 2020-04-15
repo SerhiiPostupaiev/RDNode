@@ -1,9 +1,11 @@
 const http = require('http');
-const url = require('url');
+
+const router = require('./router');
+const { Connection } = require('./dbLayer/dbService');
 
 const PORT = 3000;
 
-const router = require('./router');
+Connection.connectToMongoDB();
 
 const app = http.createServer(async (req, res) => {
   await router.handleRoute(req, res);
