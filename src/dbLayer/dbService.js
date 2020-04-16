@@ -1,22 +1,25 @@
-const { MongoClient } = require('mongodb');
-const dbConfigs = require('./dbConfigs.json');
+const redis = require('redis');
 
 class Connection {
-  static async connectToMongoDB() {
-    if (!this.db) {
-      this.db = await MongoClient.connect(this.dbUri, this.options);
-      this.db = await this.db.db('tasks-db');
-    }
+  static connectToRedis(port, triggerServer) {
+    if (!Connection.client) {
+      Connection.client = redis.createClient({
+        host: 'redis',
+        port,
+      });
 
-    console.log('MongoDB connected!');
+      Connection.client.on('connect', () => {
+        console.log('Redis client connected');
+        triggerServer();
+      });
+
+      Connection.client.on('error', (err) => {
+        console.err(err);
+      });
+    }
   }
 }
 
-Connection.db = null;
-Connection.dbUri = dbConfigs.mongoURI;
-Connection.options = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-};
+Connection.client = null;
 
 module.exports = { Connection };

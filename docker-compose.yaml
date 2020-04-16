@@ -2,6 +2,10 @@ version: '3.1'
 
 services:
   server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
     container_name: server-node
     image: node
     ports:
@@ -11,21 +15,33 @@ services:
       - ./src:/src
     working_dir: '/src'
     depends_on:
-      - mongo
+      - redis
     links:
-      - mongo
-    command: 'sh start.sh ${MODE}'
+      - redis
+    networks:
+      - redis
 
   client:
+    build:
+      context: ./nginx
     container_name: static-nginx
     image: nginx
     ports:
       - 80:80
     volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
       - ./static:/usr/share/nginx/html
 
-  mongo:
-    container_name: mongo
-    image: mongo
+  redis:
+    build:
+      context: ./redis
+    image: 'redis'
+    container_name: redis
     ports:
-      - 27017:27017
+      - '6379:6379'
+    networks:
+      - redis
+
+networks:
+  redis:
+    driver: bridge

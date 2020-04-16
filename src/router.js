@@ -1,4 +1,4 @@
-const { Tasks } = require('./controllers/tasks');
+const { Topics } = require('./controllers/topics');
 const responseHelpers = require('./response/methods');
 
 class Router {
@@ -19,6 +19,12 @@ class Router {
 
     if (route && typeof route.path === 'object') {
       idParam = req.url.match(route.path)[1];
+
+      if (req.method === 'GET') {
+        const params = this.getParamsParser(req.url.match(route.path)[1]);
+
+        return route.handler(req, res, params);
+      }
     }
 
     if (route) {
@@ -31,6 +37,13 @@ class Router {
     } else {
       return responseHelpers.error(res, 'Endpoint not found', 404);
     }
+  }
+
+  getParamsParser(params) {
+    return params.split('&').reduce(function (acc, item, i) {
+      acc[item.split('=')[0]] = item.split('=')[1];
+      return acc;
+    }, {});
   }
 
   bodyParser(req) {
@@ -77,31 +90,10 @@ class Router {
 
 const router = new Router();
 
-router
-  .add({
-    method: 'GET',
-    path: '/tasks',
-    handler: Tasks.get,
-  })
-  .add({
-    method: 'GET',
-    path: /\/tasks\/([0-9a-z]+)/,
-    handler: Tasks.get,
-  })
-  .add({
-    method: 'POST',
-    path: '/tasks',
-    handler: Tasks.post,
-  })
-  .add({
-    method: 'PUT',
-    path: /\/tasks\/([0-9a-z]+)/,
-    handler: Tasks.put,
-  })
-  .add({
-    method: 'DELETE',
-    path: /\/tasks\/([0-9a-z]+)/,
-    handler: Tasks.delete,
-  });
+router.add({
+  method: 'GET',
+  path: /\/topics\?([0-9a-zA-Z|\=|\&]+)/,
+  handler: Topics.get,
+});
 
 module.exports = router;

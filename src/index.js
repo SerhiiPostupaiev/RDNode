@@ -1,14 +1,17 @@
 const http = require('http');
 
-const router = require('./router');
 const { Connection } = require('./dbLayer/dbService');
+const router = require('./router');
 
 const PORT = 3000;
+const REDIS_PORT = 6379;
 
-Connection.connectToMongoDB();
+Connection.connectToRedis(REDIS_PORT, runServer);
 
-const app = http.createServer(async (req, res) => {
-  await router.handleRoute(req, res);
-});
+function runServer() {
+  const app = http.createServer(async (req, res) => {
+    await router.handleRoute(req, res);
+  });
 
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+}
