@@ -102,7 +102,6 @@ async function performEdit(e) {
         showError(result.error);
         return;
       }
-      console.log(result.data);
       task.insertAdjacentHTML('afterend', renderTask(result.data));
       task.remove();
     } catch (err) {

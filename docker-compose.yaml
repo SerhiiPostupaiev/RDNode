@@ -2,6 +2,10 @@ version: '3.1'
 
 services:
   server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
     container_name: server-node
     image: node
     ports:
@@ -14,17 +18,21 @@ services:
       - mongo
     links:
       - mongo
-    command: 'sh start.sh ${MODE}'
 
   client:
+    build:
+      context: ./nginx
     container_name: static-nginx
     image: nginx
     ports:
       - 80:80
     volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
       - ./static:/usr/share/nginx/html
 
   mongo:
+    build:
+      context: ./mongo
     container_name: mongo
     image: mongo
     ports:
