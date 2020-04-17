@@ -6,7 +6,6 @@ module.exports = async function () {
       manager_id serial PRIMARY KEY,
         fullName VARCHAR (50) NOT NULL
     );`;
-
   const documentsTable = `
     CREATE TABLE Documents(
       document_id serial PRIMARY KEY,
@@ -16,16 +15,19 @@ module.exports = async function () {
         REFERENCES Managers (manager_id) MATCH SIMPLE
         ON UPDATE NO ACTION ON DELETE NO ACTION
     );`;
-
   await Connection.client.query(managersTable, (err) => {
     if (err) {
       console.error(err.message);
     }
   });
-
   await Connection.client.query(documentsTable, (err) => {
     if (err) {
       console.error(err.message);
     }
   });
+  // await Connection.client.query('DROP TABLE Managers, Documents', (err) => {
+  //   if (err) {
+  //     console.error(err.message);
+  //   }
+  // });
 };

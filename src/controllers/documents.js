@@ -4,31 +4,43 @@ const { Connection } = require('../dbLayer/dbService');
 class Documents {
   static get(req, res, id) {
     if (id) {
-      Documents.getConcreteTask(req, res, id);
+      Documents.getConcreteDocument(req, res, id);
     } else {
-      Documents.getAllTasks(req, res);
+      Documents.getAllDocuments(req, res);
     }
   }
 
-  static async getConcreteTask(req, res, id) {
+  static async getConcreteDocument(req, res, id) {
     try {
-      return responseHelpers.success(res, task);
+      const getOneQuery = `SELECT * FROM Documents WHERE document_id=${id}`;
+      const { rows } = await Connection.client.query(getOneQuery);
+
+      if (rows.length === 0) {
+        return responseHelpers.payloadError(res, 'Document not found');
+      }
+
+      return responseHelpers.success(res, rows);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  static async getAllTasks(req, res) {
+  static async getAllDocuments(req, res) {
     try {
-      return responseHelpers.success(res, tasks);
+      const joinAll = `SELECT * FROM Documents D FULL OUTER JOIN Managers M ON D.manager_id=M.manager_id WHERE D.document_id IS NOT NULL`;
+      const getAllQuery = `SELECT * FROM Documents`;
+
+      const { rows } = await Connection.client.query(joinAll);
+
+      return responseHelpers.success(res, rows);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  static post(req, res, id, body) {
+  static async post(req, res, id, body) {
     const validation = Documents.paramsValidation(body);
 
     if (!validation.result) {
@@ -36,18 +48,97 @@ class Documents {
     }
 
     try {
-      console.log(body);
+      const document = {
+        content: body.content,
+      };
+
+      if (body.manager_id) {
+        document.manager_id = body.manager_id;
+      }
+
+      const addDocumentQuery = `INSERT INTO Documents (content${
+        document.manager_id ? ', manager_id' : ''
+      })
+       VALUES ('${document.content}'${
+        document.manager_id ? ',' + document.manager_id : ''
+      }) RETURNING document_id`;
+
+      const { rows } = await Connection.client.query(addDocumentQuery);
+
+      document.document_id = rows[0].document_id;
+      return responseHelpers.success(res, document);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
     }
   }
 
-  static put() {}
+  static async put(req, res, id, body) {
+    const validation = Documents.paramsValidation(body);
 
-  static delete() {}
+    if (!validation.result) {
+      return responseHelpers.payloadError(res, validation.errorText);
+    }
+
+    try {
+      const document = {
+        document_id: id,
+        content: body.content,
+      };
+
+      if (body.manager_id) {
+        document.manager_id = body.manager_id;
+      }
+
+      const updateDocumentQuery = `UPDATE Documents 
+      SET content='${document.content}'${
+        document.manager_id ? ', manager_id=' + document.manager_id : ''
+      }
+      WHERE document_id=${document.document_id}`;
+
+      const { rowCount } = await Connection.client.query(updateDocumentQuery);
+
+      if (rowCount === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Document not found, nothing to update'
+        );
+      }
+
+      return responseHelpers.success(res, document);
+    } catch (err) {
+      console.error(err);
+      return responseHelpers.error(res, err);
+    }
+  }
+
+  static async delete(req, res, id) {
+    try {
+      const deleteQuery = `DELETE FROM Documents WHERE document_id=${id}`;
+      const { rowCount } = await Connection.client.query(deleteQuery);
+
+      if (rowCount === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Document not found, nothing to delete'
+        );
+      }
+
+      return responseHelpers.success(res, id);
+    } catch (err) {
+      console.error(err);
+      return responseHelpers.error(res, err);
+    }
+  }
 
   static paramsValidation(params) {
+    if (params.manager_id === '') {
+      return {
+        result: false,
+        errorText: 'Invalid manager ID provided',
+      };
+    }
+
     if (params.content === '') {
       return {
         result: false,
