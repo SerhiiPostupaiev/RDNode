@@ -6,7 +6,7 @@ const router = require('./router');
 const { Connection } = require('./dbLayer/dbService');
 const initialQueries = require('./queries/initial');
 
-const PORT = 3000;
+const PORT = 5000;
 
 Connection.connectToPostgres(runServer);
 
