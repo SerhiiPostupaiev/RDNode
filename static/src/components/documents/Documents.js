@@ -22,7 +22,7 @@ const Documents = () => {
     return (
       <Fragment>
         {popup && <DocumentForm />}
-        <h4>Please add a document</h4>
+        <h4>Please add a document (bottom left)</h4>
         <PopupBtn />
       </Fragment>
     );

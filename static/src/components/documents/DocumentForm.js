@@ -1,4 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
+import Select from 'react-select';
+
 import DocumentsContext from '../../context/documents/documentsContext';
 import ManagersContext from '../../context/managers/managersContext';
 
@@ -40,18 +42,6 @@ const DocumentForm = () => {
 
   const onChange = (e) => {
     setDocument({ ...document, [e.target.name]: e.target.value });
-
-    if (e.target.name === 'manager_id') {
-      managers.map((item) => {
-        if (item.manager_id === +e.target.value) {
-          setDocument({
-            ...document,
-            fullname: item.fullname,
-            manager_id: e.target.value,
-          });
-        }
-      });
-    }
   };
 
   const onSubmit = (e) => {
@@ -69,6 +59,21 @@ const DocumentForm = () => {
     clearCurrent();
   };
 
+  const managersOptions = [{ value: 'unassigned', label: 'unassigned' }];
+  if (managers) {
+    managers.map((item) =>
+      managersOptions.push({ value: item.manager_id, label: item.fullname })
+    );
+  }
+
+  const handleChange = (selectedOption) => {
+    setDocument({
+      ...document,
+      fullname: selectedOption.label,
+      manager_id: selectedOption.value,
+    });
+  };
+
   return (
     <form className='document-form form form-relative' onSubmit={onSubmit}>
       <span
@@ -84,20 +89,17 @@ const DocumentForm = () => {
 
       <h4>Select Asignee</h4>
       <div className='form__group'>
-        <select name='manager_id' onChange={onChange} required>
-          <option value=''></option>
-          <option value='unassigned'>unassigned</option>
-          {managers &&
-            managers.map((item) => (
-              <option
-                value={item.manager_id}
-                key={item.manager_id}
-                data-name={item.fullname}
-              >
-                {item.fullname}
-              </option>
-            ))}
-        </select>
+        {managers && (
+          <Select
+            options={managersOptions}
+            name='manager_id'
+            value={managersOptions.find(
+              (option) => +document.manager_id === +option.value
+            )}
+            onChange={handleChange}
+            placeholder='Select asignee'
+          />
+        )}
       </div>
 
       <div className='form__group'>

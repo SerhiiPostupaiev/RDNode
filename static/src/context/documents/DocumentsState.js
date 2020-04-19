@@ -26,6 +26,14 @@ const DocumentsState = (props) => {
   const [state, dispatch] = useReducer(documentsReducer, initialState);
 
   const addDocument = async (document) => {
+    const addDoc = {
+      content: document.content,
+      manager_id: document.manager_id,
+    };
+
+    if (document.manager_id === '' || document.manager_id === 'unassigned') {
+      addDoc.manager_id = 'null';
+    }
     try {
       const response = await fetch('http://localhost:5000/documents', {
         method: 'POST',
@@ -33,11 +41,7 @@ const DocumentsState = (props) => {
           'Content-Type': 'application/json',
         },
 
-        body: JSON.stringify({
-          manager_id:
-            document.manager_id !== 'unassigned' ? document.manager_id : 'null',
-          content: document.content,
-        }),
+        body: JSON.stringify(addDoc),
       });
       const result = await response.json();
       if (document.manager_id !== 'unassigned') {
