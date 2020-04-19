@@ -46,6 +46,8 @@ services:
     volumes:
       - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
       - ./static/build:/usr/share/nginx/html
+      - ./static/build:/usr/share/nginx/html/documents
+      - ./static/build:/usr/share/nginx/html/managers
     depends_on:
       - client-builder
     links:
