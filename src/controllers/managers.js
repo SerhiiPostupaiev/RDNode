@@ -47,11 +47,13 @@ class Managers {
 
     try {
       const manager = {
-        fullName: body.fullName,
+        fullname: body.fullname,
       };
 
-      const addManagerQuery = `INSERT INTO Managers (fullName)
-       VALUES ('${manager.fullName}') RETURNING manager_id`;
+      const addManagerQuery = `INSERT INTO Managers (fullname)
+       VALUES ('${Managers.doubleApostrophes(
+         manager.fullname
+       )}') RETURNING manager_id`;
 
       const { rows } = await Connection.client.query(addManagerQuery);
 
@@ -73,11 +75,11 @@ class Managers {
     try {
       const manager = {
         manager_id: id,
-        fullName: body.fullName,
+        fullname: body.fullname,
       };
 
       const updateManagerQuery = `UPDATE Managers 
-      SET fullName='${manager.fullName}'
+      SET fullname='${Managers.doubleApostrophes(manager.fullname)}'
       WHERE manager_id=${manager.manager_id}`;
 
       const { rowCount } = await Connection.client.query(updateManagerQuery);
@@ -120,14 +122,14 @@ class Managers {
   }
 
   static paramsValidation(params) {
-    if (params.fullName === '') {
+    if (params.fullname === '') {
       return {
         result: false,
         errorText: 'Full name is not given',
       };
     }
 
-    if (!params.fullName) {
+    if (!params.fullname) {
       return {
         result: false,
         errorText: 'Data is not provided',
@@ -135,6 +137,10 @@ class Managers {
     }
 
     return { result: true };
+  }
+
+  static doubleApostrophes(text) {
+    return text.replace(/'/g, "''");
   }
 }
 

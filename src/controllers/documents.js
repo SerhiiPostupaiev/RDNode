@@ -32,7 +32,6 @@ class Documents {
       const getAllQuery = `SELECT * FROM Documents`;
 
       const { rows } = await Connection.client.query(joinAll);
-
       return responseHelpers.success(res, rows);
     } catch (err) {
       console.error(err);
@@ -59,7 +58,7 @@ class Documents {
       const addDocumentQuery = `INSERT INTO Documents (content${
         document.manager_id ? ', manager_id' : ''
       })
-       VALUES ('${document.content}'${
+       VALUES ('${Documents.doubleApostrophes(document.content)}'${
         document.manager_id ? ',' + document.manager_id : ''
       }) RETURNING document_id`;
 
@@ -91,7 +90,7 @@ class Documents {
       }
 
       const updateDocumentQuery = `UPDATE Documents 
-      SET content='${document.content}'${
+      SET content='${Documents.doubleApostrophes(document.content)}'${
         document.manager_id ? ', manager_id=' + document.manager_id : ''
       }
       WHERE document_id=${document.document_id}`;
@@ -146,6 +145,13 @@ class Documents {
       };
     }
 
+    if (params.content.length > 700) {
+      return {
+        result: false,
+        errorText: "Document's content is too long",
+      };
+    }
+
     if (!params.content) {
       return {
         result: false,
@@ -154,6 +160,10 @@ class Documents {
     }
 
     return { result: true };
+  }
+
+  static doubleApostrophes(text) {
+    return text.replace(/'/g, "''");
   }
 }
 

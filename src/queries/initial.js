@@ -25,7 +25,7 @@ module.exports = async function () {
       console.error(err.message);
     }
   });
-  // await Connection.client.query('DROP TABLE Managers, Documents', (err) => {
+  // await Connection.client.query('ALTER TABLE Documents ALTER COLUMN content TYPE varchar(700);', (err) => {
   //   if (err) {
   //     console.error(err.message);
   //   }
