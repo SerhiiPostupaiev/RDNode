@@ -1,24 +1,28 @@
-const { Client, Pool } = require('pg');
+const Sequelize = require('sequelize');
+const dbConfigs = require('./dbConfig.json');
 
 class Connection {
-  static async connectToPostgres(triggerServer) {
+  static async connectToPostgres() {
     try {
       if (!Connection.client) {
-        Connection.client = new Client({
-          host: process.env.POSTGRES_HOST || 'db',
-          user: process.env.POSTGRES_USER || 'postgres',
-          password: process.env.POSTGRES_PASSWORD || 'postgres',
-          database: process.env.POSTGRES_DB || 'documents',
+        Connection.client = new Sequelize(dbConfigs.postgresURI, {
+          define: {
+            timestamps: false,
+          },
         });
 
-        await Connection.client.connect();
+        await Connection.client
+          .authenticate()
+          .then(() => console.log('Connected to postgres'))
+          .catch((err) => console.error(err));
       }
-
-      console.log('Connected to postgres');
-      triggerServer();
     } catch (err) {
       console.error(err);
     }
+  }
+
+  static async synchronize() {
+    await Connection.client.sync().catch((err) => console.error(err));
   }
 }
 

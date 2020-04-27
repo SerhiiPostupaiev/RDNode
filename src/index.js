@@ -2,21 +2,23 @@ const http = require('http');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const router = require('./router');
 const { Connection } = require('./dbLayer/dbService');
-const initialQueries = require('./queries/initial');
+const PORT = process.env.PORT || 5000;
 
-const PORT = 5000;
+main();
 
-Connection.connectToPostgres(runServer);
+async function runServer() {
+  const router = require('./router');
 
-function runServer() {
   const app = http.createServer(async (req, res) => {
     await router.handleRoute(req, res);
   });
 
   app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+}
 
-  // uncomment to create tables
-  initialQueries();
+async function main() {
+  await Connection.connectToPostgres();
+
+  await runServer();
 }

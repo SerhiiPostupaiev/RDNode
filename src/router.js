@@ -1,5 +1,7 @@
-const { Managers } = require('./controllers/managers');
-const { Documents } = require('./controllers/documents');
+const { Genres } = require('./controllers/genres');
+const { Directors } = require('./controllers/directors');
+const { Shooting } = require('./controllers/shooting');
+const { Movies } = require('./controllers/movies');
 
 const responseHelpers = require('./response/methods');
 
@@ -82,53 +84,103 @@ const router = new Router();
 router
   .add({
     method: 'GET',
-    path: '/managers',
-    handler: Managers.get,
+    path: '/directors',
+    handler: Directors.get,
   })
   .add({
     method: 'GET',
-    path: /\/managers\/([0-9a-z]+)/,
-    handler: Managers.get,
+    path: /\/directors\/([0-9a-z]+)/,
+    handler: Directors.get,
   })
   .add({
     method: 'POST',
-    path: '/managers',
-    handler: Managers.post,
+    path: '/directors',
+    handler: Directors.post,
   })
   .add({
     method: 'PUT',
-    path: /\/managers\/([0-9a-z]+)/,
-    handler: Managers.put,
+    path: /\/directors\/([0-9a-z]+)/,
+    handler: Directors.put,
   })
   .add({
     method: 'DELETE',
-    path: /\/managers\/([0-9a-z]+)/,
-    handler: Managers.delete,
+    path: /\/directors\/([0-9a-z]+)/,
+    handler: Directors.delete,
   })
   .add({
     method: 'GET',
-    path: '/documents',
-    handler: Documents.get,
+    path: '/genres',
+    handler: Genres.get,
   })
   .add({
     method: 'GET',
-    path: /\/documents\/([0-9a-z]+)/,
-    handler: Documents.get,
+    path: /\/genres\/([0-9a-z]+)/,
+    handler: Genres.get,
   })
   .add({
     method: 'POST',
-    path: '/documents',
-    handler: Documents.post,
+    path: '/genres',
+    handler: Genres.post,
   })
   .add({
     method: 'PUT',
-    path: /\/documents\/([0-9a-z]+)/,
-    handler: Documents.put,
+    path: /\/genres\/([0-9a-z]+)/,
+    handler: Genres.put,
   })
   .add({
     method: 'DELETE',
-    path: /\/documents\/([0-9a-z]+)/,
-    handler: Documents.delete,
+    path: /\/genres\/([0-9a-z]+)/,
+    handler: Genres.delete,
+  })
+  .add({
+    method: 'GET',
+    path: '/movies',
+    handler: Movies.get,
+  })
+  .add({
+    method: 'GET',
+    path: /\/movies\/([0-9a-z]+)/,
+    handler: Movies.get,
+  })
+  .add({
+    method: 'POST',
+    path: '/movies',
+    handler: Movies.post,
+  })
+  .add({
+    method: 'PUT',
+    path: /\/movies\/([0-9a-z]+)/,
+    handler: Movies.put,
+  })
+  .add({
+    method: 'DELETE',
+    path: /\/movies\/([0-9a-z]+)/,
+    handler: Movies.delete,
+  })
+  .add({
+    method: 'GET',
+    path: '/starring',
+    handler: Shooting.get,
+  })
+  .add({
+    method: 'GET',
+    path: /\/starring\/([0-9a-z]+)/,
+    handler: Shooting.get,
+  })
+  .add({
+    method: 'POST',
+    path: '/starring',
+    handler: Shooting.post,
+  })
+  .add({
+    method: 'PUT',
+    path: /\/starring\/([0-9a-z]+)/,
+    handler: Shooting.put,
+  })
+  .add({
+    method: 'DELETE',
+    path: /\/starring\/([0-9a-z]+)/,
+    handler: Shooting.delete,
   });
 
 module.exports = router;
