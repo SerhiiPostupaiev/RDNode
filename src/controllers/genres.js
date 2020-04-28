@@ -14,6 +14,12 @@ class Genres {
 
   static async getConcreteGenre(req, res, id) {
     try {
+      const response = await dataService.selectDataById(Genre, id);
+      if (response.length === 0) {
+        return responseHelpers.payloadError(res, 'Genre not found');
+      }
+
+      return responseHelpers.success(res, response);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
@@ -22,6 +28,9 @@ class Genres {
 
   static async getAllGenres(req, res) {
     try {
+      const response = await dataService.selectAllData(Genre);
+
+      return responseHelpers.success(res, response);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
@@ -57,6 +66,19 @@ class Genres {
     }
 
     try {
+      const genreFields = {
+        title: body.title,
+      };
+
+      const response = await dataService.updateData(Genre, genreFields, id);
+      if (response[0] === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Genre not found, nothing to update'
+        );
+      }
+
+      return responseHelpers.success(res, response);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);
@@ -65,6 +87,15 @@ class Genres {
 
   static async delete(req, res, id) {
     try {
+      const response = await dataService.deleteData(Genre, id);
+      if (response === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'Genre not found, nothing to delete'
+        );
+      }
+
+      return responseHelpers.success(res, response);
     } catch (err) {
       console.error(err);
       return responseHelpers.error(res, err);

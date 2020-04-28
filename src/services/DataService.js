@@ -7,7 +7,6 @@ const { Connection } = require('../dbLayer/dbService');
 
 class DataService {
   constructor() {
-    this.synced = false;
     this.services = {
       Director,
       Genre,
@@ -21,6 +20,33 @@ class DataService {
 
   async addData(Service, data) {
     const response = await Service.create(data);
+
+    return response;
+  }
+
+  async updateData(Service, data, id) {
+    const response = await Service.update(data, {
+      where: { id },
+      returning: true,
+    });
+
+    return response;
+  }
+
+  async selectAllData(Service) {
+    const response = await Service.findAll();
+
+    return response;
+  }
+
+  async selectDataById(Service, id) {
+    const response = await Service.findAll({ where: { id } });
+
+    return response;
+  }
+
+  async deleteData(Service, id) {
+    const response = await Service.destroy({ where: { id } });
 
     return response;
   }
