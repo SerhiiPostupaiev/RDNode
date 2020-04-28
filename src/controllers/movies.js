@@ -51,11 +51,29 @@ class Movies {
         directorId: body.directorId,
       };
 
-      const addedMovie = await dataService.addData(Movie, movieFields);
+      const addedMovie = await moviesService.addMovie(movieFields);
+
+      if (addedMovie === 0) {
+        return responseHelpers.payloadError(
+          res,
+          'You have tried to mark director which is not in the database'
+        );
+      }
 
       if (body.addGenres) {
-        await moviesService.addShooting(body.addGenres, addedMovie.id);
+        const shootingResponse = await moviesService.addShooting(
+          body.addGenres,
+          addedMovie.id
+        );
+
+        // if (shootingResponse === 0) {
+        //   return responseHelpers.payloadError(
+        //     res,
+        //     'You have tried to add genre, which is not present is the database'
+        //   );
+        // }
       }
+
       const response = await moviesService.getSingleMovie(addedMovie.id);
 
       return responseHelpers.success(res, response);
@@ -78,14 +96,24 @@ class Movies {
         directorId: body.directorId,
       };
 
-      await dataService.updateData(Movie, movieFields, id);
-
       if (body.addGenres) {
-        await moviesService.addShooting(body.addGenres, id);
+        const shootingResponse = await moviesService.addShooting(
+          body.addGenres,
+          id
+        );
+
+        if (shootingResponse === 0) {
+          return responseHelpers.payloadError(
+            res,
+            'You have tried to add invalid genre'
+          );
+        }
       }
       if (body.removeGenres) {
         await moviesService.deleteShooting(body.removeGenres, id);
       }
+
+      await dataService.updateData(Movie, movieFields, id);
 
       const response = await moviesService.getSingleMovie(id);
       if (response[0] === 0) {

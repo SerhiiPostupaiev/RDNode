@@ -1,6 +1,5 @@
 const { Genres } = require('./controllers/genres');
 const { Directors } = require('./controllers/directors');
-const { Shootings } = require('./controllers/shootings');
 const { Movies } = require('./controllers/movies');
 
 const responseHelpers = require('./response/methods');
@@ -156,21 +155,6 @@ router
     method: 'DELETE',
     path: /\/movies\/([0-9a-z]+)/,
     handler: Movies.delete,
-  })
-  .add({
-    method: 'GET',
-    path: '/shootings',
-    handler: Shootings.get,
-  })
-  .add({
-    method: 'POST',
-    path: '/shootings',
-    handler: Shootings.post,
-  })
-  .add({
-    method: 'DELETE',
-    path: /\/shootings\/([0-9a-z]+)/,
-    handler: Shootings.delete,
   });
 
 module.exports = router;

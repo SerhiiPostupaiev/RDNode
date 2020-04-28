@@ -1,14 +1,20 @@
-export const ADD_DOCUMENT = 'ADD_DOCUMENT';
-export const DELETE_DOCUMENT = 'DELETE_DOCUMENT';
-export const EDIT_DOCUMENT = 'EDIT_DOCUMENT';
-export const GET_DOCUMENTS = 'GET_DOCUMENTS';
-export const DOCUMENT_ERROR = 'DOCUMENT_ERROR';
+export const ADD_MOVIE = 'ADD_MOVIE';
+export const DELETE_MOVIE = 'DELETE_MOVIE';
+export const EDIT_MOVIE = 'EDIT_MOVIE';
+export const GET_MOVIES = 'GET_MOVIES';
+export const MOVIE_ERROR = 'MOVIE_ERROR';
 
-export const ADD_MANAGER = 'ADD_MANAGER';
-export const EDIT_MANAGER = 'EDIT_MANAGER';
-export const DELETE_MANAGER = 'DELETE_MANAGER';
-export const GET_MANAGERS = 'GET_MANAGERS';
-export const MANAGER_ERROR = 'DOCUMENT_ERROR';
+export const ADD_DIRECTOR = 'ADD_DIRECTOR';
+export const EDIT_DIRECTOR = 'EDIT_DIRECTOR';
+export const DELETE_DIRECTOR = 'DELETE_DIRECTOR';
+export const GET_DIRECTORS = 'GET_DIRECTORS';
+export const DIRECTOR_ERROR = 'DIRECTOR_ERROR';
+
+export const ADD_GENRE = 'ADD_GENRE';
+export const EDIT_GENRE = 'EDIT_GENRE';
+export const DELETE_GENRE = 'DELETE_GENRE';
+export const GET_GENRES = 'GET_GENRES';
+export const GENRE_ERROR = 'GENRE_ERROR';
 
 export const CLEAR_CURRENT = 'CLEAR_CURRENT';
 export const SET_CURRENT = 'SET_CURRENT';

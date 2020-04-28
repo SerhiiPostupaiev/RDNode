@@ -2,11 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import Select from 'react-select';
 
 import DocumentsContext from '../../context/documents/documentsContext';
-import ManagersContext from '../../context/managers/managersContext';
+import DirectorsContext from '../../context/directors/directorsContext';
 
 const DocumentForm = () => {
   const documentsContext = useContext(DocumentsContext);
-  const managersContext = useContext(ManagersContext);
+  const managersContext = useContext(DirectorsContext);
 
   const { managers, getManagers } = managersContext;
   const {

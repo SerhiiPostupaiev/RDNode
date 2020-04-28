@@ -8,7 +8,7 @@ import {
 
 import Documents from '../documents/Documents';
 import Navbar from '../layout/Navbar';
-import Managers from '../managers/Managers';
+import Directors from '../directors/Managers';
 
 const Home = () => {
   return (
@@ -19,7 +19,7 @@ const Home = () => {
           <Switch>
             <Redirect exact from='/' to='/documents' />
             <Route exact path='/documents' component={Documents} />
-            <Route exact path='/managers' component={Managers} />
+            <Route exact path='/directors' component={Directors} />
           </Switch>
         </div>
       </Router>

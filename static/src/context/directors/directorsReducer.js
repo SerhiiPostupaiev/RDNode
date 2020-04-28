@@ -1,46 +1,44 @@
 import {
-  ADD_MANAGER,
-  EDIT_MANAGER,
-  DELETE_MANAGER,
-  GET_MANAGERS,
-  MANAGER_ERROR,
+  ADD_DIRECTOR,
+  DELETE_DIRECTOR,
+  EDIT_DIRECTOR,
+  GET_DIRECTORS,
+  DIRECTOR_ERROR,
   CLEAR_CURRENT,
   SET_CURRENT,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
-    case GET_MANAGERS:
+    case GET_DIRECTORS:
       return {
         ...state,
-        managers: action.payload,
+        directors: action.payload,
       };
 
-    case ADD_MANAGER:
+    case ADD_DIRECTOR:
       return {
         ...state,
-        managers: [action.payload, ...state.managers],
+        directors: [action.payload, ...state.directors],
       };
 
-    case DELETE_MANAGER:
+    case DELETE_DIRECTOR:
       return {
         ...state,
-        managers: state.managers.filter(
-          (manager) => manager.manager_id !== action.payload
+        directors: state.directors.filter(
+          (director) => directors.id !== action.payload
         ),
       };
 
-    case EDIT_MANAGER:
+    case EDIT_DIRECTOR:
       return {
         ...state,
-        managers: state.managers.map((manager) =>
-          manager.manager_id === +action.payload.manager_id
-            ? action.payload
-            : manager
+        directors: state.directors.map((director) =>
+          director.id === +action.payload.id ? action.payload : director
         ),
       };
 
-    case MANAGER_ERROR:
+    case DIRECTOR_ERROR:
       return {
         ...state,
         error: action.payload,

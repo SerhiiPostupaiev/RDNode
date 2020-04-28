@@ -3,7 +3,7 @@ import React from 'react';
 import Home from './pages/Home';
 
 import DocumentsState from '../context/documents/DocumentsState';
-import ManagersState from '../context/managers/ManagersState';
+import DirectorsState from '../context/directors/DirectorsState';
 
 import './App.less';
 
@@ -15,9 +15,9 @@ import '@fortawesome/fontawesome-free/js/brands';
 const App = () => {
   return (
     <DocumentsState>
-      <ManagersState>
+      <DirectorsState>
         <Home />
-      </ManagersState>
+      </DirectorsState>
     </DocumentsState>
   );
 };

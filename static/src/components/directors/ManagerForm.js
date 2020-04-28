@@ -1,22 +1,23 @@
 import React, { useState, useContext, useEffect } from 'react';
-import ManagersContext from '../../context/managers/managersContext';
+import DirectorsContext from '../../context/directors/directorsContext';
 
 const ManagerForm = () => {
-  const managersContext = useContext(ManagersContext);
+  const directorsContext = useContext(DirectorsContext);
 
-  const { addManager, clearCurrent, editManager, current } = managersContext;
+  const { addDirector, clearCurrent, editDirector, current } = directorsContext;
 
   useEffect(() => {
     if (current !== null) {
-      setManager(current);
+      setDirector(current);
     } else {
-      setManager({
-        fullname: '',
+      setDirector({
+        firstName: '',
+        lastName: '',
       });
     }
-  }, [managersContext, current]);
+  }, [directorsContext, current]);
 
-  const [manager, setManager] = useState({
+  const [manager, setDirector] = useState({
     fullname: '',
   });
 

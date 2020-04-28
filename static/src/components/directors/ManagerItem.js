@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import ManagerContext from '../../context/managers/managersContext';
+import ManagerContext from '../../context/directors/directorsContext';
 
 const ManagerItem = ({ manager: { manager_id, fullname }, manager }) => {
   const managerContext = useContext(ManagerContext);

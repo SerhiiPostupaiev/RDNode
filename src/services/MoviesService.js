@@ -20,7 +20,7 @@ class MoviesService {
       include: [this.services.Genre],
     }).then((movies) =>
       Promise.all(
-        movies.map(async (item, index, array) => {
+        movies.map(async (item) => {
           const director = await this.services.Director.findOne({
             where: { id: item.directorId },
           }).then((directorData) => directorData.get({ plain: true }));
@@ -78,8 +78,50 @@ class MoviesService {
 
   async addShooting(params, movieId) {
     for (let item of params) {
+      let genre = await this.services.Genre.findOne({
+        where: { id: item },
+      });
+
+      if (!genre) {
+        return 0;
+      }
+
+      let shootingCheck = await this.services.Shooting.findOne({
+        where: { movieId, genreId: item },
+      });
+
+      if (shootingCheck) {
+        return 0;
+      }
+
       await this.services.Shooting.create({ genreId: item, movieId });
     }
+  }
+
+  async addMovie(params) {
+    const director = await this.services.Director.findOne({
+      where: { id: params.directorId },
+    });
+
+    if (!director) {
+      return 0;
+    }
+
+    const response = await this.services.Movie.create(params);
+
+    return response;
+  }
+
+  async checkGenre(id) {
+    let genre = await this.services.Genre.findOne({
+      where: { id },
+    });
+
+    if (!genre) {
+      return false;
+    }
+
+    return true;
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, Fragment } from 'react';
 
-import ManagersContext from '../../context/managers/managersContext';
+import ManagersContext from '../../context/directors/directorsContext';
 
 import ManagerItem from './ManagerItem';
 import ManagerForm from './ManagerForm';
