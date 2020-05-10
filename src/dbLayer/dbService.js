@@ -1,31 +1,18 @@
-const Sequelize = require('sequelize');
+const mongoose = require('mongoose');
 const dbConfigs = require('./dbConfig.json');
 
-class Connection {
-  static async connectToPostgres() {
-    try {
-      if (!Connection.client) {
-        Connection.client = new Sequelize(dbConfigs.postgresURI, {
-          define: {
-            timestamps: false,
-          },
-        });
+const connectDB = async () => {
+  try {
+    await mongoose.connect(dbConfigs.mongoURI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
 
-        await Connection.client
-          .authenticate()
-          .then(() => console.log('Connected to postgres'))
-          .catch((err) => console.error(err));
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.log(err.message);
+    process.exit(1);
   }
+};
 
-  static async synchronize() {
-    await Connection.client.sync().catch((err) => console.error(err));
-  }
-}
-
-Connection.client = null;
-
-module.exports = { Connection };
+module.exports = connectDB;
