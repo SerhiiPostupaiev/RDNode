@@ -9,7 +9,9 @@ services:
     container_name: server-node
     image: node
     ports:
-      - 5000:5000
+      - 3000:3000
+      - 3001:3001
+      - 3002:3002
       - 9222:9222
     volumes:
       - ./src:/src
@@ -18,23 +20,6 @@ services:
       - db
     links:
       - db
-
-  client-builder:
-    build:
-      context: ./client-builder
-    environment:
-      - MODE=${MODE}
-    container_name: client-builder
-    image: node:12.13.0-alpine
-    ports:
-      - 3000:3000
-    volumes:
-      - ./static:/static
-    working_dir: '/static'
-    depends_on:
-      - server
-    links:
-      - server
 
   client:
     build:
@@ -46,12 +31,6 @@ services:
     volumes:
       - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
       - ./static/build:/usr/share/nginx/html
-      - ./static/build:/usr/share/nginx/html/documents
-      - ./static/build:/usr/share/nginx/html/managers
-    depends_on:
-      - client-builder
-    links:
-      - client-builder
 
   db:
     build:
