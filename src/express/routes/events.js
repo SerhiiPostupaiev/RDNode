@@ -1,35 +1,37 @@
 const { Router } = require('express');
 const { check, validationResult } = require('express-validator');
 
-const authCheck = require('./auth-check-middleware');
-const {
-  getEventsController,
-  createEventController
-} = require('../controllers/events.controller');
+const authCheck = require('../middlewares/auth-check-middleware');
+const validationCheck = require('../middlewares/validation-check-middleware');
 
+const di = require('../di');
+const { EventController, EventValidator } = di.container;
 const router = Router();
 
-router.get('/', getEventsController);
+router.get('/', EventController.getEvents);
 
 router.post(
   '/',
   authCheck,
-  [
-    check('title').isLength({ min: 5 }),
-    check('description').isLength({ min: 5 }),
-    check('date').isLength({ min: 5 }),
-    check('price').isNumeric(),
-  ],
-  (req, res, next) => {
-    // Finds the validation errors in this request and wraps them in an object with handy functions
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({errors: errors.array()});
-    }
+  EventValidator.getCreateValidator(),
+  validationCheck,
+  EventController.createEvent
+);
 
-    next();
-  },
-  createEventController
+router.put(
+  '/',
+  authCheck,
+  EventValidator.getUpdateValidator(),
+  validationCheck,
+  EventController.updateEvent
+);
+
+router.delete(
+  '/',
+  authCheck,
+  EventValidator.getDeleteValidator(),
+  validationCheck,
+  EventController.deleteEvent
 );
 
 module.exports = router;

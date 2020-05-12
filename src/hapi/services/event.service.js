@@ -36,8 +36,25 @@ class EventService {
     return await this.model.scope('withUser').findByPk(event.id);
   };
 
+  updateEvent = async (payload, userId) => {
+    const event = await this.model.findByPk(payload.eventId);
+
+    if (!event) {
+      return { msg: 'Event not found' };
+    }
+
+    return await event.update(payload, {
+      where: { id: payload.eventId },
+      returning: true,
+    });
+  };
+
   deleteEvent = async ({ eventId }) => {
     const event = await this.model.findByPk(eventId);
+
+    if (!event) {
+      return { msg: 'Event not found' };
+    }
 
     await event.destroy();
 

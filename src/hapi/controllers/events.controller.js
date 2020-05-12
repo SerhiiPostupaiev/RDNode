@@ -18,6 +18,16 @@ class EventController {
         req.userId,
         req.dbContext
       );
+    } catch (err) {}
+  };
+
+  updateEvent = async (req, h) => {
+    try {
+      return await this.entityService.updateEvent(
+        req.payload,
+        req.userId,
+        req.dbContext
+      );
     } catch (err) {
       return h.response(err.message).code(400);
     }

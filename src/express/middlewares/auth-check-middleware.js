@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const handleUnauthorized = function (res) {
-  res.send(401);
+  res.sendStatus(401);
 };
 
 module.exports = (req, res, next) => {
@@ -11,16 +11,10 @@ module.exports = (req, res, next) => {
     return handleUnauthorized(res);
   }
 
-  const token = authHeader.split(' ')[1];
-
-  if (!token || token === '') {
-    return handleUnauthorized(res);
-  }
-
   let decodedToken;
 
   try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    decodedToken = jwt.verify(authHeader, process.env.JWT_SECRET_KEY);
   } catch (err) {
     return handleUnauthorized(res);
   }
@@ -32,4 +26,4 @@ module.exports = (req, res, next) => {
   req.isAuth = true;
   req.userId = decodedToken.userId;
   next();
-}
+};

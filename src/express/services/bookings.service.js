@@ -1,35 +1,33 @@
-async function bookings(db) {
-  return await db.Booking.scope('withModels').findAll();
-}
-
-async function bookEvent(eventId, userId, db) {
-  try {
-    const booking = await db.Booking.create({
-      eventId,
-      userId
-    });
-
-    return await db.Booking.scope('withModels').findByPk(booking.id);
-  } catch (err) {
-    throw new Error(err);
+class BookingsService {
+  constructor(model) {
+    this.model = model;
   }
-}
 
-async function cancelBooking(bookingId, db) {
-  try {
-    const booking = await db.Booking.scope('withModels').findByPk(bookingId);
+  bookings = async () => {
+    return await this.model.scope('withModels').findAll();
+  };
+
+  bookEvent = async (eventId, userId) => {
+    try {
+      const booking = await this.model.create({
+        eventId,
+        userId,
+      });
+
+      return await this.model.scope('withModels').findByPk(booking.id);
+    } catch (e) {
+      throw new Error(e);
+    }
+  };
+
+  cancelBooking = async (bookingId) => {
+    const booking = await this.model.scope('withModels').findByPk(bookingId);
     const event = booking.event;
 
     await booking.destroy();
 
     return event;
-  } catch (err) {
-    throw new Error(err);
-  }
+  };
 }
 
-module.exports = {
-  bookings,
-  bookEvent,
-  cancelBooking
-};
+module.exports = BookingsService;

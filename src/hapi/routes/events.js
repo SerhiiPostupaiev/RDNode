@@ -18,8 +18,21 @@ module.exports = [
     handler: EventController.createEvent,
   },
   {
+    method: 'PUT',
+    path: '/events',
+    options: {
+      auth: 'jwt',
+      validate: EventValidator.getUpdateValidator(),
+    },
+    handler: EventController.updateEvent,
+  },
+  {
     method: 'DELETE',
     path: '/events',
+    options: {
+      auth: 'jwt',
+      validate: EventValidator.getDeleteValidator(),
+    },
     handler: EventController.deleteEvent,
   },
 ];
