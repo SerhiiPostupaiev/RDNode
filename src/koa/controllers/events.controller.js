@@ -1,17 +1,31 @@
-const {
-  events,
-  createEvent
-} = require('../services/event.service');
+class EventController {
+  constructor(entityService) {
+    this.entityService = entityService;
+  }
 
-async function eventsController(ctx, next) {
-  ctx.body = await events(ctx.dbContext);
+  getEvents = async (ctx, next) => {
+    ctx.body = await this.entityService.events(ctx.dbContext);
+  };
+
+  createEvent = async (ctx, next) => {
+    ctx.body = await this.entityService.createEvent(
+      ctx.request.body,
+      ctx.userId,
+      ctx.dbContext
+    );
+  };
+
+  updateEvent = async (ctx, next) => {
+    ctx.body = await this.entityService.updateEvent(
+      ctx.request.body,
+      ctx.userId,
+      ctx.dbContext
+    );
+  };
+
+  deleteEvent = async (ctx, next) => {
+    ctx.body = await this.entityService.deleteEvent(ctx.request.body);
+  };
 }
 
-async function createEventController(ctx, next) {
-  ctx.body = await createEvent(ctx.request.body, ctx.userId, ctx.dbContext);
-}
-
-module.exports = {
-  eventsController,
-  createEventController
-}
+module.exports = EventController;

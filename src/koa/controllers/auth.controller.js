@@ -1,17 +1,23 @@
-const {
-  login,
-  signup
-} = require('../services/auth.service');
+class AuthController {
+  constructor(entityService) {
+    this.entityService = entityService;
+  }
 
-async function loginController(ctx, next) {
-  ctx.body = await login(ctx.request.body.email, ctx.request.body.password, ctx.dbContext);
+  login = async (ctx, next) => {
+    ctx.body = await this.entityService.login(
+      ctx.request.body.email,
+      ctx.request.body.password,
+      ctx.dbContext
+    );
+  };
+
+  signup = async (ctx, next) => {
+    ctx.body = await this.entityService.signup(
+      ctx.request.body.email,
+      ctx.request.body.password,
+      ctx.dbContext
+    );
+  };
 }
 
-async function signupController(ctx, next) {
-  ctx.body = await signup(ctx.request.body.email, ctx.request.body.password, ctx.dbContext);
-}
-
-module.exports = {
-  loginController,
-  signupController,
-}
+module.exports = AuthController;

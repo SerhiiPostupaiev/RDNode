@@ -1,14 +1,11 @@
 const router = require('koa-router')();
 
-const userValidator = require('../validators/user.validation');
+const di = require('../di');
 
-const {
-  loginController,
-  signupController
-} = require('../controllers/auth.controller');
+const { AuthController, UserValidator } = di.container;
 
-router.post('/login', userValidator, loginController);
+router.post('/login', UserValidator.createValidator, AuthController.login);
 
-router.post('/signup', userValidator, signupController);
+router.post('/signup', UserValidator.createValidator, AuthController.signup);
 
 module.exports = router;

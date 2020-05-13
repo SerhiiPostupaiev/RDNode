@@ -1,22 +1,25 @@
 const router = require('koa-router')();
 
-const authCheck = require('./auth-check-middleware');
+const authCheck = require('../middlewares/auth-check-middleware');
 
-const {
-  createValidator,
-  deleteValidator
-} = require('../validators/booking.validation');
+const di = require('../di');
 
-const {
-  getBookingsController,
-  bookEventController,
-  cancelBookingController
-} = require('../controllers/bookings.controller');
+const { BookingController, BookingValidator } = di.container;
 
-router.get('/', authCheck, getBookingsController);
+router.get('/', authCheck, BookingController.getBookings);
 
-router.post('/', authCheck, createValidator, bookEventController);
+router.post(
+  '/',
+  authCheck,
+  BookingValidator.createValidator,
+  BookingController.bookEvent
+);
 
-router.delete('/', authCheck, deleteValidator, cancelBookingController);
+router.delete(
+  '/',
+  authCheck,
+  BookingValidator.deleteValidator,
+  BookingController.cancelBooking
+);
 
 module.exports = router;

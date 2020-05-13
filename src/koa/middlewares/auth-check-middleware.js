@@ -11,16 +11,10 @@ module.exports = async (ctx, next) => {
     return handleUnauthorized(ctx);
   }
 
-  const token = authHeader.split(' ')[1];
-
-  if (!token || token === '') {
-    return handleUnauthorized(ctx);
-  }
-
   let decodedToken;
 
   try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    decodedToken = jwt.verify(authHeader, process.env.JWT_SECRET_KEY);
   } catch (err) {
     return handleUnauthorized(ctx);
   }
@@ -33,4 +27,4 @@ module.exports = async (ctx, next) => {
   ctx.userId = decodedToken.userId;
 
   await next();
-}
+};
