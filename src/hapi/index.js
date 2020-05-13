@@ -8,7 +8,7 @@ const PORT = 3001;
 
 async function createHapiServer() {
   const server = Hapi.Server({
-    port: PORT
+    port: PORT,
   });
 
   await server.register(require('hapi-auth-jwt2'));
@@ -26,9 +26,18 @@ async function createHapiServer() {
     return h.continue;
   });
 
-  server.start()
+  server.events.on('response', function (request) {
+    console.log(
+      `${request.info.remoteAddress}: ${request.method.toUpperCase()} ${
+        request.path
+      } --> ${request.response.statusCode}`
+    );
+  });
+
+  server
+    .start()
     .then(() => console.log(`Hapi server running on http://localhost:${PORT}`))
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 }
 
 process.on('unhandledRejection', (err) => {

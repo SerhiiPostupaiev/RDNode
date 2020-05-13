@@ -3,16 +3,17 @@ const bodyParser = require('koa-bodyparser');
 const koaValidator = require('koa-async-validator');
 
 const dbContext = require('../database/models');
-
 const router = require('./routes');
-
 const PORT = 3002;
+
+const logger = require('koa-logger');
 
 function createKoaServer() {
   const app = new Koa();
 
   app.use(bodyParser());
   app.use(koaValidator());
+  app.use(logger());
 
   app.use(async (ctx, next) => {
     try {
@@ -40,8 +41,9 @@ function createKoaServer() {
     // catches all unhandled errors
   });
 
-  app.listen(PORT, () => console.log(`Koa server running on http://localhost:${PORT}`));
-
+  app.listen(PORT, () =>
+    console.log(`Koa server running on http://localhost:${PORT}`)
+  );
 }
 
 module.exports = createKoaServer;

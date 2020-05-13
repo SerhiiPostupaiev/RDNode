@@ -2,13 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const dbContext = require('../database/models');
-
 const rootRouter = require('./routes');
-
 const PORT = 3000;
+
+const morgan = require('morgan');
 
 function createExpressServer() {
   const app = express();
+  app.use(morgan('combined'));
 
   app.use(bodyParser.json());
 
@@ -29,7 +30,9 @@ function createExpressServer() {
     next(err);
   });
 
-  const server = app.listen(PORT, () => console.log(`Express server running on http://localhost:${PORT}`));
+  const server = app.listen(PORT, () =>
+    console.log(`Express server running on http://localhost:${PORT}`)
+  );
 }
 
 module.exports = createExpressServer;

@@ -1,7 +1,7 @@
-// const createHapiServer = require('./hapi');
+const createHapiServer = require('./hapi');
 // const createExpressServer = require('./express');
-const createKoaServer = require('./koa');
+// const createKoaServer = require('./koa');
 
-// createHapiServer();
+createHapiServer();
 // createExpressServer();
-createKoaServer();
+// createKoaServer();
