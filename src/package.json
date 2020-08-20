@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js -L",
     "server": "nodemon index.js -L",
     "debug": "nodemon --inspect=0.0.0.0:9222 index.js -L"
   },
