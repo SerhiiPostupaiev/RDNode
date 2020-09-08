@@ -1,0 +1,68 @@
+version: '3.1'
+
+services:
+  server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
+    container_name: server-node
+    image: node
+    ports:
+      - 5000:5000
+      - 9222:9222
+    volumes:
+      - ./src:/src
+    working_dir: '/src'
+    depends_on:
+      - db
+    links:
+      - db
+
+  client-builder:
+    build:
+      context: ./client-builder
+    environment:
+      - MODE=${MODE}
+    container_name: client-builder
+    image: node:12.13.0-alpine
+    ports:
+      - 3000:3000
+    volumes:
+      - ./static:/static
+    working_dir: '/static'
+    depends_on:
+      - server
+    links:
+      - server
+
+  client:
+    build:
+      context: ./nginx
+    container_name: static-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
+      - ./static/build:/usr/share/nginx/html
+      - ./static/build:/usr/share/nginx/html/documents
+      - ./static/build:/usr/share/nginx/html/managers
+    depends_on:
+      - client-builder
+    links:
+      - client-builder
+
+  db:
+    build:
+      context: ./postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: documents
+    container_name: postgres-db
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

@@ -1,0 +1,37 @@
+.documents-list {
+  margin: 0 auto;
+  width: 500px;
+
+  &__btn {
+    margin: 0 5px;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+}
+
+.document {
+  margin-top: 50px;
+  border-bottom: 1px solid black;
+
+  &__content {
+    text-align: justify;
+  }
+
+  &__asignee {
+    text-align: right;
+    &_caption {
+      margin-bottom: 0px;
+    }
+  }
+
+  &__head {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__controls {
+    margin-top: 10px;
+  }
+}
