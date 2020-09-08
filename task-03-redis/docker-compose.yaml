@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+  server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
+    container_name: server-node
+    image: node
+    ports:
+      - 3000:3000
+      - 9222:9222
+    volumes:
+      - ./src:/src
+    working_dir: '/src'
+    depends_on:
+      - redis
+    links:
+      - redis
+    networks:
+      - redis
+
+  client:
+    build:
+      context: ./nginx
+    container_name: static-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
+      - ./static:/usr/share/nginx/html
+
+  redis:
+    build:
+      context: ./redis
+    image: 'redis'
+    container_name: redis
+    ports:
+      - '6379:6379'
+    networks:
+      - redis
+
+networks:
+  redis:
+    driver: bridge
