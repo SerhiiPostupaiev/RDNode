@@ -1,0 +1,39 @@
+version: '3.1'
+
+services:
+  server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
+    container_name: server-node
+    image: node
+    ports:
+      - 3000:3000
+      - 9222:9222
+    volumes:
+      - ./src:/src
+    working_dir: '/src'
+    depends_on:
+      - mongo
+    links:
+      - mongo
+
+  client:
+    build:
+      context: ./nginx
+    container_name: static-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
+      - ./static:/usr/share/nginx/html
+
+  mongo:
+    build:
+      context: ./mongo
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017

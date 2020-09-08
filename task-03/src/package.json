@@ -1,0 +1,19 @@
+{
+  "name": "src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon index.js -L",
+    "debug": "nodemon --inspect=0.0.0.0:9222 index.js -L"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.5.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
+  }
+}
