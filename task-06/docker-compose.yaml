@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  server:
+    build:
+      context: ./node
+    environment:
+      - MODE=${MODE}
+    container_name: server-node
+    image: node
+    ports:
+      - 5000:5000
+      - 9222:9222
+    volumes:
+      - ./src:/src
+    working_dir: '/src'
+
+  client:
+    build:
+      context: ./nginx
+    container_name: static-nginx
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf/nginx.conf:/usr/share/nginx/nginx.conf
+      - ./static:/usr/share/nginx/html
